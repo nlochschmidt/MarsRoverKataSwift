@@ -31,6 +31,10 @@ class LandedMarsRover {
           self.position = planet.locate(position + direction.relativePosition())
         case "b":
           self.position = planet.locate(position - direction.relativePosition())
+        case "l":
+          self.direction = self.direction.turnLeft()
+        case "r":
+          self.direction = self.direction.turnRight()
         default: return
       }   
     }
@@ -40,7 +44,7 @@ class LandedMarsRover {
 
 
 enum Direction: Int {
-  case North, East, South, West
+  case North, East, South, West 
 
   func relativePosition() -> Position {
     switch self {
@@ -49,6 +53,22 @@ enum Direction: Int {
     case .West: return Position(x: -1, y: 0)
     case .East: return Position(x: 1, y: 0)
     default: return Position(x: 0, y: 0)
+    }
+  }
+
+  func turnRight() -> Direction {
+    if let nextDirection = Direction(rawValue: ((self.rawValue + 1) % 4)) {
+      return nextDirection
+    } else {
+      return Direction.North
+    }
+  }
+
+  func turnLeft() -> Direction {
+    if let nextDirection = Direction(rawValue: (self.rawValue - 1)) {
+      return nextDirection
+    } else {
+      return Direction.West
     }
   }
 }
@@ -143,6 +163,7 @@ func landedMarsRoverTests() {
     return rover.land(mars)
   }
 
+  // drive forward
   test({
     () -> () in 
     let landedRover = landedMarsRover()
@@ -150,11 +171,41 @@ func landedMarsRoverTests() {
     assert(landedRover.position == Position(x: 0, y: 1))
   })
 
+  // drive backward
   test({
     () -> () in 
     let landedRover = landedMarsRover()
     landedRover.move("b")
     assert(landedRover.position == Position(x: 0, y: 99))
+  })
+
+  // turn left
+  test({
+    () -> () in 
+    let landedRover = landedMarsRover()
+    landedRover.move("l")
+    assert(landedRover.direction == .West)
+  })
+
+  //turn right
+  test({
+    () -> () in 
+    let landedRover = landedMarsRover()
+    landedRover.move("r")
+    assert(landedRover.direction == .East)
+  })
+
+  // drive around to Position (2, 1) facing North
+  test({
+    () -> () in 
+    let landedRover = landedMarsRover()
+    landedRover.move("ffrff")
+    assert(landedRover.position == Position(x: 2, y: 2))
+    assert(landedRover.direction == .East)
+
+    landedRover.move("lb")
+    assert(landedRover.position == Position(x: 2, y: 1))
+    assert(landedRover.direction == .North)
   })
 }
 
@@ -182,6 +233,20 @@ func directionTests() {
     assert(Direction.South.relativePosition() == Position(x: 0, y: -1))
     assert(Direction.West.relativePosition() == Position(x: -1, y: 0))
     assert(Direction.East.relativePosition() == Position(x: 1, y: 0))
+  })
+
+  //test turning from a Direction
+  test({
+    () -> () in 
+    assert(Direction.North.turnLeft() == .West)
+    assert(Direction.West.turnLeft() == .South)
+    assert(Direction.South.turnLeft() == .East)
+    assert(Direction.East.turnLeft() == .North)
+
+    assert(Direction.North.turnRight() == .East)
+    assert(Direction.East.turnRight() == .South)
+    assert(Direction.South.turnRight() == .West)
+    assert(Direction.West.turnRight() == .North)
   })
 }
 
