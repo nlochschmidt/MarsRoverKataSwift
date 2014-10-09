@@ -27,6 +27,16 @@ class LandedMarsRover {
 
 enum Direction: Int {
   case North, East, South, West
+
+  func relativePosition() -> Position {
+    switch self {
+    case .North: return Position(x: 0, y: 1)
+    case .South: return Position(x: 0, y: -1)
+    case .West: return Position(x: -1, y: 0)
+    case .East: return Position(x: 1, y: 0)
+    default: return Position(x: 0, y: 0)
+    }
+  }
 }
 
 class Position : Equatable {
@@ -119,6 +129,17 @@ func planetTests() {
   })
 }
 
+func directionTests() {
+  //test relativePosition from Direction
+  test({
+    () -> () in 
+    assert(Direction.North.relativePosition() == Position(x: 0, y: 1))
+    assert(Direction.South.relativePosition() == Position(x: 0, y: -1))
+    assert(Direction.West.relativePosition() == Position(x: -1, y: 0))
+    assert(Direction.East.relativePosition() == Position(x: 1, y: 0))
+  })
+}
+
 func positionTests() {
   
   // test equality
@@ -147,4 +168,5 @@ func positionTests() {
 marsRoverTests()
 planetTests()
 positionTests()
+directionTests()
 println("All tests passed")
