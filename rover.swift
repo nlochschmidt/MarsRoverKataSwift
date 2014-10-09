@@ -39,6 +39,12 @@ class Position : Equatable {
   }
 }
 
+func +(originalPosition: Position, relativePosition: Position) -> Position {
+  return Position(
+    x: originalPosition.x + relativePosition.x, 
+    y: originalPosition.y + relativePosition.y)
+}
+
 func ==(left: Position, right: Position) -> Bool {
   return left.x == right.x && left.y == right.y
 }
@@ -114,12 +120,28 @@ func planetTests() {
 }
 
 func positionTests() {
-  let originalPosition = Position(x: 10, y: 100)
-  let equalPosition = Position(x: 10, y: 100)
-  let differentPosition = Position(x: 0, y: 0)
   
-  assert(originalPosition == equalPosition)
-  assert(originalPosition != differentPosition)
+  // test equality
+  test({
+    () -> () in
+    let originalPosition = Position(x: 10, y: 100)
+    let equalPosition = Position(x: 10, y: 100)
+    let differentPosition = Position(x: 0, y: 0)
+    
+    assert(originalPosition == equalPosition)
+    assert(originalPosition != differentPosition)
+  })
+
+  // test position adding
+  test({
+    () -> () in
+    let originalPosition = Position(x: 10, y: 20)
+    let relativePosition = Position(x: -5, y: 5)
+  
+    let resultingPosition = Position(x: 5, y: 25)
+    
+    assert((originalPosition + relativePosition) == resultingPosition)
+  })
 }
 
 marsRoverTests()
