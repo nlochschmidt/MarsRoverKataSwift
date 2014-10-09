@@ -23,7 +23,21 @@ class LandedMarsRover {
     self.planet = planet
     self.position = position
   }
+
+  func move(commands: String) {
+    for command in commands {
+      switch command {
+        case "f": 
+          self.position = planet.locate(position + direction.relativePosition())
+        case "b":
+          self.position = planet.locate(position - direction.relativePosition())
+        default: return
+      }   
+    }
+  }
 }
+
+
 
 enum Direction: Int {
   case North, East, South, West
@@ -53,6 +67,16 @@ func +(originalPosition: Position, relativePosition: Position) -> Position {
   return Position(
     x: originalPosition.x + relativePosition.x, 
     y: originalPosition.y + relativePosition.y)
+}
+
+prefix func -(position: Position) -> Position {
+  return Position(
+    x: -position.x,
+    y: -position.y)
+}
+
+func -(originalPosition: Position, relativePosition: Position) -> Position {
+  return originalPosition + (-relativePosition)
 }
 
 func ==(left: Position, right: Position) -> Bool {
@@ -113,6 +137,27 @@ func marsRoverTests() {
   })
 }
 
+func landedMarsRoverTests() {
+  func landedMarsRover() -> LandedMarsRover {
+    let rover = MarsRover(startingPoint: (0, 0))
+    return rover.land(mars)
+  }
+
+  test({
+    () -> () in 
+    let landedRover = landedMarsRover()
+    landedRover.move("f")
+    assert(landedRover.position == Position(x: 0, y: 1))
+  })
+
+  test({
+    () -> () in 
+    let landedRover = landedMarsRover()
+    landedRover.move("b")
+    assert(landedRover.position == Position(x: 0, y: 99))
+  })
+}
+
 func planetTests() {
 
   //test location wrapping on planet
@@ -166,6 +211,7 @@ func positionTests() {
 }
 
 marsRoverTests()
+landedMarsRoverTests()
 planetTests()
 positionTests()
 directionTests()
