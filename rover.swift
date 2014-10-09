@@ -1,5 +1,10 @@
 class MarsRover {
-  var position: Position = Position(x: 0, y: 0)
+  var position: Position
+
+  init(startingPoint: (Int, Int)) {
+    let (x, y) = startingPoint
+    position = Position(x: x, y: y)
+  }
 }
 
 class Position : Equatable {
@@ -19,7 +24,7 @@ func ==(left: Position, right: Position) -> Bool {
 //Tests
 
 func marsRoverTests() {
-	let rover = MarsRover()
+	let rover = MarsRover(startingPoint: (0, 0))
 	assert(rover.position == Position(x: 0, y: 0))
 }
 
