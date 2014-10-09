@@ -16,12 +16,17 @@ class MarsRover {
 class LandedMarsRover {
   
   var position: Position
+  var direction: Direction = .North
   let planet: Planet
 
   init(planet: Planet, position: Position) {
     self.planet = planet
     self.position = position
   }
+}
+
+enum Direction: Int {
+  case North, East, South, West
 }
 
 class Position : Equatable {
@@ -88,6 +93,7 @@ func marsRoverTests() {
     let rover = MarsRover(startingPoint: (0, 0))
     let landedRover = rover.land(mars)
     assert(landedRover.planet == mars)
+    assert(landedRover.direction == .North)
   })
 }
 
