@@ -1,3 +1,5 @@
+#!/usr/bin/swift
+
 class MarsRover {
 
   var landingPlace: Position
